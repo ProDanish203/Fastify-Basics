@@ -34,7 +34,9 @@ async function userRoutes(server: FastifyInstance) {
   );
   server.post("/logout", logoutHandler);
 
-  server.get("/", allUsersHandler);
+  server.get("/", {
+    preHandler: [server.authenticate],
+  }, allUsersHandler);
 }
 
 export default userRoutes;
