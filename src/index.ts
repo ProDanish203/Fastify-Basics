@@ -5,7 +5,6 @@ const server = createServer();
 async function main() {
   try {
     config();
-    // await server.listen(8000, '0.0.0.0');
     const port = Number(process.env.PORT || 8000);
     await server.listen({
       port,

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { withRefResolver } from "fastify-zod";
 // Routes
 import userRoutes from "./modules/user/user.route";
+import { userSchemas } from "./modules/user/user.schema";
 // import postRoutes from "./modules/post/post.route";
 
 declare module "fastify" {
@@ -41,11 +42,20 @@ export function createServer() {
     }
   );
 
+  server.addHook("preHandler", (req, reply, next) => {
+    req.jwt = server.jwt;
+    return next();
+  });
+
+  for (const schema of userSchemas) {
+    server.addSchema(schema);
+  }
+
   server.get("/", () => {
     return { message: "Fastify Basic REST API" };
   });
 
-    server.register(userRoutes, { prefix: "api/v1/users" });
+  server.register(userRoutes, { prefix: "api/v1/users" });
   //   server.register(postRoutes, { prefix: "api/v1/posts" });
 
   return server;
