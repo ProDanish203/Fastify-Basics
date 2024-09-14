@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @unique()
-  email String  @unique
-  name  String?
-  salt  String
-  posts Post[]
+  id       String  @id @unique() @default(uuid())
+  email    String  @unique
+  name     String?
+  salt     String
+  password String
+  posts    Post[]
 }
 
 model Post {
-  id        Int      @id @unique()
+  id        String   @id @unique() @default(uuid())
   caption   String
-  userId    Int
+  userId    String
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

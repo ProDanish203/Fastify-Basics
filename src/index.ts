@@ -1,21 +1,22 @@
-import fastify, {
-  FastifyInstance,
-  FastifyRequest,
-  FastifyReply,
-} from "fastify";
+import { createServer } from "./server";
+import { config } from "dotenv";
+const server = createServer();
 
-const app: FastifyInstance = fastify({
-    logger: true,
-});
+async function main() {
+  try {
+    config();
+    // await server.listen(8000, '0.0.0.0');
+    const port = Number(process.env.PORT || 8000);
+    await server.listen({
+      port,
+      host: "0.0.0.0",
+    });
 
-app.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
-  return { hello: "world" };
-});
-
-app.listen(8000, (err, address) => {
-  if (err) {
-    app.log.error(err);
+    server.log.info(`Server listening at http://localhost:${port}`);
+  } catch (err) {
+    server.log.error(err);
     process.exit(1);
   }
-  app.log.info(`Server listening at ${address}`);
-});
+}
+
+main();
